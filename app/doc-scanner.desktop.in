@@ -1,0 +1,8 @@
+[Desktop Entry]
+_Name=Document Scanner
+Comment=Scan your documents and create PDFs directly from your smartphone!
+Exec=@EXEC@
+Icon=@ICON@
+Terminal=false
+Type=Application
+X-Ubuntu-Touch=true

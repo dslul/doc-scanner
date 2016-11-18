@@ -1,0 +1,16 @@
+{
+    "name": "@APP_ID@",
+    "description": "Scan your documents and create PDFs directly from your smartphone!",
+    "architecture": "@CLICK_ARCH@",
+    "title": "Document Scanner",
+    "hooks": {
+        "doc-scanner": {
+            "apparmor": "doc-scanner.apparmor",
+            "content-hub": "doc-scanner.json",
+            "desktop": "doc-scanner.desktop"
+        }
+    },
+    "version": "0.1",
+    "maintainer": "Daniele Laudani <laudanidaniele@gmail.com>",
+    "framework": "ubuntu-sdk-15.04.6"
+}
