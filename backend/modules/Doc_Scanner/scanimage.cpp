@@ -24,20 +24,34 @@ void smoothBinarization(Mat& output)
 
 bool warpScan(Mat& origFrame, Mat& output, vector<Point2f> cornerPoints)
 {
-    //resize(origFrame, output, Size(297*5, 210*5));
+
+    // compute the width of the new image, which will be the
+    // maximum distance between bottom-right and bottom-left
+    // x-coordiates or the top-right and top-left x-coordinates
+    double widthA = sqrt((pow((cornerPoints[2].x - cornerPoints[3].x),2)) + (pow((cornerPoints[2].y - cornerPoints[3].y),2)));
+    double widthB = sqrt((pow((cornerPoints[1].x - cornerPoints[0].x),2)) + (pow((cornerPoints[1].y - cornerPoints[0].y),2)));
+    double maxWidth = max(int(widthA), int(widthB));
+    cout << widthA << "   " << widthB << endl;
+    // compute the height of the new image, which will be the
+    // maximum distance between the top-right and bottom-right
+    // y-coordinates or the top-left and bottom-left y-coordinates
+    double heightA = sqrt((pow((cornerPoints[1].x - cornerPoints[2].x),2)) + (pow((cornerPoints[1].y - cornerPoints[2].y),2)));
+    double heightB = sqrt((pow((cornerPoints[0].x - cornerPoints[3].x),2)) + (pow((cornerPoints[0].y - cornerPoints[3].y),2)));
+    double maxHeight = max(int(heightA), int(heightB));
+    cout << heightA << "   " << heightB << endl;
 
     vector<Point2f> warpPoints;
     warpPoints.push_back(Point2f(0, 0));
-    warpPoints.push_back(Point2f(0, origFrame.rows));
-    warpPoints.push_back(Point2f(origFrame.cols, origFrame.rows));
-    warpPoints.push_back(Point2f(origFrame.cols, 0));
+    warpPoints.push_back(Point2f(maxWidth-1, 0));
+    warpPoints.push_back(Point2f(maxWidth-1, maxHeight-1));
+    warpPoints.push_back(Point2f(0, maxHeight-1));
 
-    output = origFrame.clone();
+    //output = origFrame.clone();
 
     Mat transformationMatrix;
     transformationMatrix = getPerspectiveTransform(cornerPoints, warpPoints);
 
-    warpPerspective(origFrame, output, transformationMatrix, output.size());
+    warpPerspective(origFrame, output, transformationMatrix, Size(maxWidth, maxHeight));
 
     return 0;
 }
@@ -52,29 +66,29 @@ vector<Point2f> order4Points(vector<Point> points)
     orderedPoints[0] = points[0];
 
     for (int var = 0; var < 4; var++) {
-        if(points[var].x + points[var].y > max) {
+        if((points[var].x + points[var].y) > max) {
             max = points[var].x + points[var].y;
             //bottom right
             orderedPoints[2] = points[var];
-        } else if(points[var].x + points[var].y < min) {
+        } else if((points[var].x + points[var].y) < min) {
             min = points[var].x + points[var].y;
             //top left
             orderedPoints[0] = points[var];
         }
     }
 
-    max = points[0].x - points[0].y;
+    max = points[0].y - points[0].x;
     orderedPoints[3] = points[0];
     min = max;
     orderedPoints[1] = points[0];
 
     for (int var = 0; var < 4; var++) {
-        if(points[var].x - points[var].y > max) {
-            max = points[var].x - points[var].y;
+        if((points[var].y - points[var].x) > max) {
+            max = points[var].y - points[var].x;
             //bottom left
             orderedPoints[3] = points[var];
-        } else if(points[var].x - points[var].y < min) {
-            min = points[var].x - points[var].y;
+        } else if((points[var].y - points[var].x) < min) {
+            min = points[var].y - points[var].x;
             //top right
             orderedPoints[1] = points[var];
         }
