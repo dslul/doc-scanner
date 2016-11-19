@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.1.0, 2016-11-18T10:44:55. -->
+<!-- Written by QtCreator 4.1.0, 2016-11-19T12:05:28. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -316,8 +316,8 @@
        <value type="QString">/var/lib/lxd/containers/builder-armhf/rootfs</value>
       </valuelist>
       <valuelist type="QVariantList" key="Qt4ProjectManager.MaemoRunConfiguration.LastDeployedTimes">
-       <value type="QDateTime">2016-11-18T10:42:45</value>
-       <value type="QDateTime">2016-11-18T10:42:45</value>
+       <value type="QDateTime">2016-11-19T11:53:20</value>
+       <value type="QDateTime">2016-11-19T11:53:20</value>
       </valuelist>
      </valuemap>
      <value type="int" key="ProjectExplorer.BuildStepList.StepsCount">2</value>

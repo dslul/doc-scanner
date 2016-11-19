@@ -17,9 +17,13 @@ ScanImage::ScanImage(QObject *parent) :
 ScanImage::~ScanImage() {
 }
 
-bool warpScan(Mat& origFrame, Mat& output, vector<Point2f> cornerPoints)
+void smoothBinarization(Mat& output)
 {
 
+}
+
+bool warpScan(Mat& origFrame, Mat& output, vector<Point2f> cornerPoints)
+{
     //resize(origFrame, output, Size(297*5, 210*5));
 
     vector<Point2f> warpPoints;
@@ -38,6 +42,51 @@ bool warpScan(Mat& origFrame, Mat& output, vector<Point2f> cornerPoints)
     return 0;
 }
 
+vector<Point2f> order4Points(vector<Point> points)
+{
+    vector<Point2f> orderedPoints(4);
+
+    float max = points[0].x + points[0].y;
+    orderedPoints[2] = points[0];
+    float min = max;
+    orderedPoints[0] = points[0];
+
+    for (int var = 0; var < 4; var++) {
+        if(points[var].x + points[var].y > max) {
+            max = points[var].x + points[var].y;
+            //bottom right
+            orderedPoints[2] = points[var];
+        } else if(points[var].x + points[var].y < min) {
+            min = points[var].x + points[var].y;
+            //top left
+            orderedPoints[0] = points[var];
+        }
+    }
+
+    max = points[0].x - points[0].y;
+    orderedPoints[3] = points[0];
+    min = max;
+    orderedPoints[1] = points[0];
+
+    for (int var = 0; var < 4; var++) {
+        if(points[var].x - points[var].y > max) {
+            max = points[var].x - points[var].y;
+            //bottom left
+            orderedPoints[3] = points[var];
+        } else if(points[var].x - points[var].y < min) {
+            min = points[var].x - points[var].y;
+            //top right
+            orderedPoints[1] = points[var];
+        }
+    }
+    return orderedPoints;
+}
+
+void scaleVector(vector<Point2f>& points, double ratio) {
+    for (int var  = 0; var < points.size(); var++) {
+        points[var] = Point2f(points[var].x/ratio, points[var].y/ratio);
+    }
+}
 
 void extractScan(Mat& frame, Mat& output, bool moreRobust)
 {
@@ -48,14 +97,19 @@ void extractScan(Mat& frame, Mat& output, bool moreRobust)
     Mat gray;
     cvtColor(frame, gray, CV_BGR2GRAY);
 
+    //moderate blur to eliminate noise and apply canny edge detection
     GaussianBlur(gray, gray, Size(5, 5), 0);
-
-    Mat edged;
-    Canny(gray, edged, 75, 200);
+    Mat thres;
+    double high_thres = threshold(gray, thres, 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
+    double low_thres = high_thres * 0.5;
+    cout << high_thres << endl;
+    Mat cannyedged;
+    Canny(gray, cannyedged, low_thres, high_thres);
+    //Canny(gray, cannyedged, 75, 200);
 
     //find contours
     vector<vector<Point> > contours;
-    findContours(edged, contours, RETR_LIST, CHAIN_APPROX_SIMPLE);
+    findContours(cannyedged, contours, RETR_LIST, CHAIN_APPROX_SIMPLE);
 
     //keep only largest contours
     QMap<double, vector<Point> > map;
@@ -64,7 +118,7 @@ void extractScan(Mat& frame, Mat& output, bool moreRobust)
         map.insert(contourArea(contours.at(i)), contours.at(i));
     }
     //get only the 10 largest contours and search for the paper
-    vector<Point> paperContour;
+    vector<Point> paperContourInt;
     QMap<double, vector<Point> >::const_iterator i = map.constEnd();
     i--;
 
@@ -76,7 +130,7 @@ void extractScan(Mat& frame, Mat& output, bool moreRobust)
         if(approx.size() == 4) {
             cout << "FOUND BORDER" << endl;
             isBorderFound = true;
-            paperContour = approx;
+            paperContourInt = approx;
             break;
         }
     }
@@ -92,13 +146,10 @@ void extractScan(Mat& frame, Mat& output, bool moreRobust)
 
     //output = orig.clone();
 
-    vector<Point2f> sheetContour(4);
-    sheetContour[0] = Point2f(paperContour[0].x/ratio, paperContour[0].y/ratio);
-    sheetContour[1] = Point2f(paperContour[1].x/ratio, paperContour[1].y/ratio);
-    sheetContour[2] = Point2f(paperContour[2].x/ratio, paperContour[2].y/ratio);
-    sheetContour[3] = Point2f(paperContour[3].x/ratio, paperContour[3].y/ratio);
+    vector<Point2f> paperContourf = order4Points(paperContourInt);
+    scaleVector(paperContourf, ratio);
 
-    warpScan(orig, output, sheetContour);
+    warpScan(orig, output, paperContourf);
 
     cvtColor(output, output, COLOR_BGR2GRAY);
     adaptiveThreshold(output, output, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 251, 10);
