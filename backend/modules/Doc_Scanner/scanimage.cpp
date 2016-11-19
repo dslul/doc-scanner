@@ -1,4 +1,6 @@
 #include "scanimage.h"
+#include "imagewarp.h"
+#include "pointvectorutils.h"
 #include <QStandardPaths>
 #include <QMap>
 #include <iostream>
@@ -22,85 +24,6 @@ void smoothBinarization(Mat& output)
 
 }
 
-bool warpScan(Mat& origFrame, Mat& output, vector<Point2f> cornerPoints)
-{
-
-    // compute the width of the new image, which will be the
-    // maximum distance between bottom-right and bottom-left
-    // x-coordiates or the top-right and top-left x-coordinates
-    double widthA = sqrt((pow((cornerPoints[2].x - cornerPoints[3].x),2)) + (pow((cornerPoints[2].y - cornerPoints[3].y),2)));
-    double widthB = sqrt((pow((cornerPoints[1].x - cornerPoints[0].x),2)) + (pow((cornerPoints[1].y - cornerPoints[0].y),2)));
-    double maxWidth = max(int(widthA), int(widthB));
-    cout << widthA << "   " << widthB << endl;
-    // compute the height of the new image, which will be the
-    // maximum distance between the top-right and bottom-right
-    // y-coordinates or the top-left and bottom-left y-coordinates
-    double heightA = sqrt((pow((cornerPoints[1].x - cornerPoints[2].x),2)) + (pow((cornerPoints[1].y - cornerPoints[2].y),2)));
-    double heightB = sqrt((pow((cornerPoints[0].x - cornerPoints[3].x),2)) + (pow((cornerPoints[0].y - cornerPoints[3].y),2)));
-    double maxHeight = max(int(heightA), int(heightB));
-    cout << heightA << "   " << heightB << endl;
-
-    vector<Point2f> warpPoints;
-    warpPoints.push_back(Point2f(0, 0));
-    warpPoints.push_back(Point2f(maxWidth-1, 0));
-    warpPoints.push_back(Point2f(maxWidth-1, maxHeight-1));
-    warpPoints.push_back(Point2f(0, maxHeight-1));
-
-    //output = origFrame.clone();
-
-    Mat transformationMatrix;
-    transformationMatrix = getPerspectiveTransform(cornerPoints, warpPoints);
-
-    warpPerspective(origFrame, output, transformationMatrix, Size(maxWidth, maxHeight));
-
-    return 0;
-}
-
-vector<Point2f> order4Points(vector<Point> points)
-{
-    vector<Point2f> orderedPoints(4);
-
-    float max = points[0].x + points[0].y;
-    orderedPoints[2] = points[0];
-    float min = max;
-    orderedPoints[0] = points[0];
-
-    for (int var = 0; var < 4; var++) {
-        if((points[var].x + points[var].y) > max) {
-            max = points[var].x + points[var].y;
-            //bottom right
-            orderedPoints[2] = points[var];
-        } else if((points[var].x + points[var].y) < min) {
-            min = points[var].x + points[var].y;
-            //top left
-            orderedPoints[0] = points[var];
-        }
-    }
-
-    max = points[0].y - points[0].x;
-    orderedPoints[3] = points[0];
-    min = max;
-    orderedPoints[1] = points[0];
-
-    for (int var = 0; var < 4; var++) {
-        if((points[var].y - points[var].x) > max) {
-            max = points[var].y - points[var].x;
-            //bottom left
-            orderedPoints[3] = points[var];
-        } else if((points[var].y - points[var].x) < min) {
-            min = points[var].y - points[var].x;
-            //top right
-            orderedPoints[1] = points[var];
-        }
-    }
-    return orderedPoints;
-}
-
-void scaleVector(vector<Point2f>& points, double ratio) {
-    for (int var  = 0; var < points.size(); var++) {
-        points[var] = Point2f(points[var].x/ratio, points[var].y/ratio);
-    }
-}
 
 void extractScan(Mat& frame, Mat& output, bool moreRobust)
 {
@@ -128,7 +51,7 @@ void extractScan(Mat& frame, Mat& output, bool moreRobust)
     //keep only largest contours
     QMap<double, vector<Point> > map;
 
-    for( int i = 0; i< contours.size(); i++ ) {
+    for(int i = 0; i< contours.size(); i++) {
         map.insert(contourArea(contours.at(i)), contours.at(i));
     }
     //get only the 10 largest contours and search for the paper
@@ -160,10 +83,10 @@ void extractScan(Mat& frame, Mat& output, bool moreRobust)
 
     //output = orig.clone();
 
-    vector<Point2f> paperContourf = order4Points(paperContourInt);
-    scaleVector(paperContourf, ratio);
+    vector<Point2f> paperContourf = PointVectorUtils::getOrdered4Points(paperContourInt);
+    PointVectorUtils::scaleVector(paperContourf, ratio);
 
-    warpScan(orig, output, paperContourf);
+    ImageWarp::warpScan(orig, output, paperContourf);
 
     cvtColor(output, output, COLOR_BGR2GRAY);
     adaptiveThreshold(output, output, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 251, 10);

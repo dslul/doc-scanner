@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.1.0, 2016-11-19T12:05:28. -->
+<!-- Written by QtCreator 4.1.0, 2016-11-19T21:33:59. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -300,8 +300,8 @@
       <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
       <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">UbuntuProjectManager.UploadStep</value>
       <valuelist type="QVariantList" key="Qt4ProjectManager.MaemoRunConfiguration.LastDeployedFiles">
-       <value type="QString">/home/daniele/Sviluppo/ubuntu-sdk/build-doc-scanner-UbuntuSDK_for_builder_armhf_GCC_armhf_ubuntu_sdk_15_04-Default/doc-scanner.dslul_0.1_armhf.click</value>
        <value type="QString">/usr/ubuntu-sdk-ide/share/qtcreator/ubuntu/scripts/qtc_device_applaunch.py</value>
+       <value type="QString">/home/daniele/Sviluppo/ubuntu-sdk/build-doc-scanner-UbuntuSDK_for_builder_armhf_GCC_armhf_ubuntu_sdk_15_04-Default/doc-scanner.dslul_0.1_armhf.click</value>
       </valuelist>
       <valuelist type="QVariantList" key="Qt4ProjectManager.MaemoRunConfiguration.LastDeployedHosts">
        <value type="QString">127.0.0.1</value>
@@ -316,8 +316,8 @@
        <value type="QString">/var/lib/lxd/containers/builder-armhf/rootfs</value>
       </valuelist>
       <valuelist type="QVariantList" key="Qt4ProjectManager.MaemoRunConfiguration.LastDeployedTimes">
-       <value type="QDateTime">2016-11-19T11:53:20</value>
-       <value type="QDateTime">2016-11-19T11:53:20</value>
+       <value type="QDateTime">2016-11-19T21:32:28</value>
+       <value type="QDateTime">2016-11-19T21:32:28</value>
       </valuelist>
      </valuemap>
      <value type="int" key="ProjectExplorer.BuildStepList.StepsCount">2</value>

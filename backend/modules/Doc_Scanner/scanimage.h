@@ -5,7 +5,9 @@
 #include <iostream>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
-//#include <opencv2/core/core.hpp>
+#include <opencv2/core/core.hpp>
+#include "imagewarp.h"
+#include "pointvectorutils.h"
 
 class ScanImage : public QObject
 {
@@ -20,12 +22,6 @@ public:
 protected:
 
     //QString m_message;
-
-//private:
-//    bool warpScan(cv::Mat& origFrame, cv::Mat& output, std::vector<cv::Point2f> cornerPoints);
-//    std::vector<cv::Point2f> getCornerPoints(const cv::Mat& img);
-//    void nonMaxRegionSuppression(cv::Mat& segmented);
-//    void extractScan(cv::Mat& frame, cv::Mat& output, bool moreRobust);
 
 };
 
