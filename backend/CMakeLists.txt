@@ -35,7 +35,6 @@ target_link_libraries(Doc_Scannerbackend ${CMAKE_CURRENT_SOURCE_DIR}/modules/Doc
 target_link_libraries(Doc_Scannerbackend ${CMAKE_CURRENT_SOURCE_DIR}/modules/Doc_Scanner/lib/libopencv_videoio.so)
 target_link_libraries(Doc_Scannerbackend ${CMAKE_CURRENT_SOURCE_DIR}/modules/Doc_Scanner/lib/libopencv_video.so)
 target_link_libraries(Doc_Scannerbackend ${CMAKE_CURRENT_SOURCE_DIR}/modules/Doc_Scanner/lib/libopencv_videostab.so)
-#link_directories("${CMAKE_CURRENT_SOURCE_DIR}/lib")
 
 set_target_properties(Doc_Scannerbackend PROPERTIES
          LIBRARY_OUTPUT_DIRECTORY Doc_Scanner)

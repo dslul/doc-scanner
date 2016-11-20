@@ -7,6 +7,10 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/core/core.hpp>
+#include <QPdfWriter>
+#include <QPainter>
+#include <QPainter>
+#include <QVariant>
 
 using namespace std;
 using namespace cv;
@@ -25,7 +29,7 @@ void smoothBinarization(Mat& output)
 }
 
 
-void extractScan(Mat& frame, Mat& output, bool moreRobust)
+void ScanImage::extractScan(Mat& frame, Mat& output, bool moreRobust)
 {
     double ratio = 500.0 / frame.rows;
     Mat orig = frame.clone();
@@ -111,4 +115,22 @@ QString ScanImage::elaborate(const QString &imgurl)
     imwrite(destfile, scan);
     return QString::fromStdString(destfile);
     std::cout << "working" << std::endl;
+}
+
+void ScanImage::exportPdf(const QVariantList &imgurl)
+{
+    QPdfWriter pdfwriter(QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/test.pdf");
+    QPainter painter(&pdfwriter);
+    pdfwriter.setPageSize(QPagedPaintDevice::A4);
+
+    for (int var = 0; var < imgurl.size(); var++) {
+        painter.drawPixmap(QRect(0,0,pdfwriter.logicalDpiX()*8.3,pdfwriter.logicalDpiY()*11.7),
+                           QPixmap((imgurl.at(var)).toString()));
+        //if it's not the last page add another one
+        if(var != imgurl.size() - 1)
+            pdfwriter.newPage();
+    }
+
+    painter.end();
+    cout << "Image has been written to the pdf file!" << endl;
 }

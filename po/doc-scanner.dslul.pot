@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-19 20:48+0000\n"
+"POT-Creation-Date: 2016-11-20 09:55+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,7 +26,7 @@ msgstr ""
 msgid "Export PDF"
 msgstr ""
 
-#: ../app/Main.qml:252
+#: ../app/Main.qml:258
 msgid "Add"
 msgstr ""
 

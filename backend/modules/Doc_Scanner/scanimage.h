@@ -18,9 +18,10 @@ public:
     explicit ScanImage(QObject *parent = 0);
     ~ScanImage();
     Q_INVOKABLE QString elaborate(const QString &imgurl);
+    Q_INVOKABLE void exportPdf(const QVariantList &imgurl);
 
 protected:
-
+    void extractScan(cv::Mat& frame, cv::Mat& output, bool moreRobust);
     //QString m_message;
 
 };

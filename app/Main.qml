@@ -234,7 +234,13 @@ MainView {
                 color: UbuntuColors.coolGrey
 
                 onClicked: {
-                    //export pdf
+                    if(imageModel.count > 0) {
+                        var imgarray = []
+                        for(var i=0; i < imageModel.count; i++)
+                            imgarray.push(imageModel.get(i).imgout)
+                        scanImage.exportPdf(imgarray)
+                    }
+
                 }
             }
 
