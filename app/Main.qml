@@ -124,6 +124,7 @@ MainView {
                             topMargin: 1.5*mainPage.gridmargin
                             bottomMargin: 1.5*mainPage.gridmargin
                         }
+                        asynchronous: true
                         fillMode: Image.PreserveAspectFit
                         source: Qt.resolvedUrl(model.imgout)
                         // Prevent blurry SVGs
@@ -188,7 +189,7 @@ MainView {
             }
         }
 
-        Rectangle {
+        Item {
             id: topPanel
             anchors {
                 left: parent.left
@@ -196,7 +197,7 @@ MainView {
                 top: pageHeader.bottom
                 topMargin: units.gu(2)
             }
-            color: "#f2f2f2"
+            //color: "#f2f2f2"
             height: units.gu(5)
 
             DropArea {
@@ -285,7 +286,6 @@ MainView {
             }
 
             model: visualModel
-            //delegate: imageDelegate
         }
 
         Loader {
