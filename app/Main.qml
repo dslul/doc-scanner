@@ -29,7 +29,7 @@ MainView {
     Page {
         id: mainPage
 
-        property var activeTransfer
+        property var activeTransfer: null
         property double gridmargin: units.gu(1)
         property double mingridwidth: units.gu(15)
 
@@ -40,6 +40,22 @@ MainView {
                 foregroundColor: UbuntuColors.coolGrey
                 //backgroundColor: UbuntuColors.porcelain
                 dividerColor: UbuntuColors.lightGrey
+            }
+        }
+
+        ContentPeer {
+            id: exportPeer
+            //appId: "com.ubuntu.docviewer_docviewer"
+            contentType: ContentType.Documents
+            handler: ContentHandler.Destination
+
+            property Component picItem: ContentItem {}
+
+            function save(filePath) {
+                console.log(filePath)
+                var transfer = exportPeer.request()
+                transfer.items = [ picItem.createObject(mainView, { "url": filePath }) ]
+                transfer.state = ContentTransfer.Charged
             }
         }
 
@@ -165,7 +181,10 @@ MainView {
                 DropArea {
                     anchors { fill: parent; margins: 15 }
 
-                    onEntered: visualModel.items.move(drag.source.visualIndex, delegateRoot.visualIndex)
+                    onEntered: {
+                        visualModel.items.move(drag.source.visualIndex, delegateRoot.visualIndex)
+                        imageModel.move(drag.source.visualIndex, delegateRoot.visualIndex, 1)
+                    }
                 }
 
                 onPressAndHold: {
@@ -239,7 +258,9 @@ MainView {
                         var imgarray = []
                         for(var i=0; i < imageModel.count; i++)
                             imgarray.push(imageModel.get(i).imgout)
-                        scanImage.exportPdf(imgarray)
+                        var path = "/home/phablet/.cache/doc-scanner.dslul/" + new Date().valueOf() + ".pdf"
+                        scanImage.exportPdf(path, imgarray)
+                        exportPeer.save(path)
                     }
 
                 }

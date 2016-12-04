@@ -117,9 +117,10 @@ QString ScanImage::elaborate(const QString &imgurl)
     std::cout << "working" << std::endl;
 }
 
-void ScanImage::exportPdf(const QVariantList &imgurl)
+void ScanImage::exportPdf(const QString &path, const QVariantList &imgurl)
 {
-    QPdfWriter pdfwriter(QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/test.pdf");
+    //QPdfWriter pdfwriter(QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/test.pdf");
+    QPdfWriter pdfwriter(path);
     QPainter painter(&pdfwriter);
     pdfwriter.setPageSize(QPagedPaintDevice::A4);
 

@@ -1,22 +1,23 @@
 import QtQuick 2.4
 import Ubuntu.Components 1.3
+
 import Ubuntu.Content 1.3
 
 Page {
-    id: picker
+    id: exportPicker
 
     header: PageHeader {
-        title: i18n.tr("Choose from")
+        title: i18n.tr("Open with")
     }
 
     ContentPeerPicker {
         visible: parent.visible
-        contentType: ContentType.Pictures
-        handler: ContentHandler.Source
+        contentType: ContentType.Documents
+        handler: ContentHandler.Destination
 
         onPeerSelected: {
-            peer.selectionType = ContentTransfer.Multiple
-            mainPage.activeTransfer = peer.request()
+            exportPeer.selectionType = ContentTransfer.Multiple
+            mainPage.activeTransfer = exportPeer.request()
             pageStack.pop()
 //            mainView.activeTransfer.stateChanged.connect(function() {
 //                if (mainView.activeTransfer.state === ContentTransfer.Charged) {
