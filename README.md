@@ -15,4 +15,4 @@ https://opencv-srf.blogspot.it/p/introduction.html
 
 https://www.pyimagesearch.com/2014/09/01/build-kick-ass-mobile-document-scanner-just-5-minutes/
 
-https://forum.diybookscanner.org/viewtopic.php?t=2997 (you can find the paper linked in the forum [here](docs/lu-binarization.pdf).
+https://forum.diybookscanner.org/viewtopic.php?t=2997 (you can find the paper linked in the forum [here](docs/lu-binarization.pdf)).
